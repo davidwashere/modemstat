@@ -10,6 +10,26 @@ import (
 	"strings"
 )
 
+type DownstreamChannel struct {
+	id             string
+	lockStatus     string
+	modulation     string
+	freq           string
+	power          string
+	snr            string
+	correctables   string
+	uncorrectables string
+}
+
+type UpstreamChannel struct {
+	id          string
+	lockStatus  string
+	channelType string
+	symbolRate  string
+	freq        string
+	power       string
+}
+
 const statusPath = "DocsisStatus.htm"
 
 func check(err error) {
@@ -32,18 +52,15 @@ func main() {
 	resp, err := client.Get(u.String())
 	check(err)
 
-	// fmt.Println(resp)
-
 	buf := new(bytes.Buffer)
 
 	req, err := http.NewRequest(http.MethodGet, u.String()+statusPath, buf)
-	req.SetBasicAuth("admin", "password")
+	req.SetBasicAuth("admin", "password") // Hardcoded credentials are publically avail and cannot be changed
 	check(err)
 
 	resp, err = client.Do(req)
 	check(err)
 
-	// fmt.Println(resp)
 	body, err := ioutil.ReadAll(resp.Body)
 
 	bodyS := strings.Split(string(body), "\n")
@@ -111,11 +128,6 @@ func main() {
 	for _, uc := range upChans {
 		fmt.Printf("%2v %7v %6v %5v Ksym/sec %12v %5v dBmV\n", uc.id, uc.lockStatus, uc.channelType, uc.symbolRate, uc.freq, uc.power)
 	}
-
-	// fmt.Println()
-	// fmt.Printf("%+v\n", downChans)
-	// fmt.Println()
-	// fmt.Printf("%+v\n", upChans)
 }
 
 func parseUpChannels(line string) []UpstreamChannel {
@@ -196,24 +208,4 @@ func parseDownChannels(line string) []DownstreamChannel {
 	}
 
 	return downChannels
-}
-
-type DownstreamChannel struct {
-	id             string
-	lockStatus     string
-	modulation     string
-	freq           string
-	power          string
-	snr            string
-	correctables   string
-	uncorrectables string
-}
-
-type UpstreamChannel struct {
-	id          string
-	lockStatus  string
-	channelType string
-	symbolRate  string
-	freq        string
-	power       string
 }
