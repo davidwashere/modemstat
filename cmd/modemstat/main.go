@@ -119,14 +119,16 @@ func main() {
 
 	fmt.Println("\nDownstream Bonded Channels")
 	fmt.Println("==========================")
-	for _, dc := range downChans {
-		fmt.Printf("%2v %7v %7v %13v %5v dBmV %5v dB %12v %12v\n", dc.id, dc.lockStatus, dc.modulation, dc.freq, dc.power, dc.snr, dc.correctables, dc.uncorrectables)
+	fmt.Printf("%3v %3v %7v %7v %13v %10v %8v %12v %12v\n", "chn", "id", "lock", "mod", "freq", "pwr", "snr", "corectbls", "uncorectbls")
+	for i, dc := range downChans {
+		fmt.Printf("%3v %3v %7v %7v %13v %5v dBmV %5v dB %12v %12v\n", i+1, dc.id, dc.lockStatus, dc.modulation, dc.freq, dc.power, dc.snr, dc.correctables, dc.uncorrectables)
 	}
 
 	fmt.Println("\nUpstream Bonded Channels")
 	fmt.Println("==========================")
-	for _, uc := range upChans {
-		fmt.Printf("%2v %7v %6v %5v Ksym/sec %12v %5v dBmV\n", uc.id, uc.lockStatus, uc.channelType, uc.symbolRate, uc.freq, uc.power)
+	fmt.Printf("%3v %3v %7v %6v %14v %12v %10v\n", "chn", "id", "lock", "type", "symRate", "freq", "pwr")
+	for i, uc := range upChans {
+		fmt.Printf("%3v %3v %7v %6v %5v Ksym/sec %12v %5v dBmV\n", i+1, uc.id, uc.lockStatus, uc.channelType, uc.symbolRate, uc.freq, uc.power)
 	}
 }
 
